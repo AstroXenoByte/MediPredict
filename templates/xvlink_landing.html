@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XVLink - Software Development Company</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body::before {
+      content: "";
+      background-image: url('static/images/tech3.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      opacity: 1;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+      z-index: -5;
+    }
+  </style>
+</head>
+<body class="text-white font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-transparent backdrop-blur-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-400">XVLink</h1>
+      <div class="space-x-8 hidden md:flex">
+        <a href="#about" class="hover:text-blue-400 font-medium">About</a>
+        <a href="#portfolio" class="hover:text-blue-400 font-medium">Our Work</a>
+        <a href="#contact" class="hover:text-blue-400 font-medium">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative py-32 px-6">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 items-center gap-12">
+
+
+
+      <div>
+        <h2 class="text-5xl font-extrabold text-blue-400 mb-6">Code That Connects</h2>
+        <p class="text-lg text-white mb-4">At XVLink, we create software that saves and improves people's lives with the use of Machine Learning and Deep Learning, Health diagnosis at your fingertips, join us on this revolutionary journey.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-4 text-white">About XVLink</h3>
+      <p class="text-white text-lg">We are a passionate team of developers and tech enthusiasts dedicated to building intuitive, high-performance modern day AI solutions, saving and improving lives, ensuring a better future for all.</p>
+    </div>
+  </section>
+
+  <!-- Our Work Section -->
+  <section id="portfolio" class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold text-center mb-12 text-white">Our Work</h3>
+      <div class="grid md:grid-cols-2 gap-8">
+        <a href="/home" target="_blank" class="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition p-6 border border-white/20">
+          <img src="https://via.placeholder.com/600x360" alt="MediPredict" class="rounded mb-4">
+          <h4 class="text-xl font-semibold text-blue-300 mb-2">MediPredict</h4>
+          <p class="text-white">An AI-powered application that analyzes medical data to predict potential health conditions with accuracy and efficiency.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 px-6 bg-black/70">
+    <div class="max-w-3xl mx-auto text-center text-white">
+      <h3 class="text-3xl font-bold mb-6">Contact Us</h3>
+      <p class="mb-4 text-blue-300 underline">
+        Email: <a href="mailto:info@xvlink.com" class="text-blue-300 hover:text-blue-500">info@xvlink.com</a>
+      </p>
+      <p class="mb-4">
+        Phone: <a href="tel:+1234567890" class="text-blue-300 hover:text-blue-500">+1 234 567 890</a> | <a href="tel:+0987654321" class="text-blue-300 hover:text-blue-500">+0 987 654 321</a>
+      </p>
+      <p class="mb-4">
+        Location: 123 Software St, Tech City, Country
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 bg-black/80 text-white text-sm">
+    &copy; 2025 XVLink. All rights reserved.
+    <div class="mt-2">
+      <a href="https://facebook.com/xvlink" class="mx-2 hover:underline">Facebook</a>
+      <a href="https://twitter.com/xvlink" class="mx-2 hover:underline">Twitter</a>
+      <a href="https://linkedin.com/company/xvlink" class="mx-2 hover:underline">LinkedIn</a>
+    </div>
+  </footer>
+
+</body>
+</html>
