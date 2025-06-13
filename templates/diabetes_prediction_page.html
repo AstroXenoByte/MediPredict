@@ -91,12 +91,16 @@
             font-weight: bold;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+        }
+
+        select {
+            background-color: white;
         }
 
         .form-row {
@@ -201,6 +205,13 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -223,13 +234,12 @@
                     <h2>Health Information</h2>
                     <form id="diabetesForm">
                         <div class="form-group">
-                            <label for="glucose">Glucose Level (mg/dL)</label>
-                            <input type="number" id="glucose" name="glucose" placeholder="70-200" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="bmi">BMI</label>
-                            <input type="number" id="bmi" name="bmi" placeholder="18.5-40" step="0.1" required>
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -238,29 +248,53 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bloodpressure">Blood Pressure (mm Hg)</label>
-                            <input type="number" id="bloodpressure" name="bloodpressure" placeholder="80-180" required>
+                            <label for="hypertension">Hypertension</label>
+                            <select id="hypertension" name="hypertension" required>
+                                <option value="">Do you have hypertension?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="pregnancies">Pregnancies (if applicable)</label>
-                            <input type="number" id="pregnancies" name="pregnancies" placeholder="0-20" value="0" min="0">
+                            <label for="heart_disease">Heart Disease</label>
+                            <select id="heart_disease" name="heart_disease" required>
+                                <option value="">Do you have heart disease?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="skinthickness">Skin Thickness (mm)</label>
-                            <input type="number" id="skinthickness" name="skinthickness" placeholder="10-50" value="20">
+                            <label for="smoking_history">Smoking History</label>
+                            <select id="smoking_history" name="smoking_history" required>
+                                <option value="">Select smoking history</option>
+                                <option value="0">Never</option>
+                                <option value="1">No Info</option>
+                                <option value="2">Current</option>
+                                <option value="3">Former</option>
+                                <option value="4">Ever</option>
+                                <option value="5">Not Current</option>
+                            </select>
+                            <small>Never=0, No Info=1, Current=2, Former=3, Ever=4, Not Current=5</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="insulin">Insulin Level (mu U/ml)</label>
-                            <input type="number" id="insulin" name="insulin" placeholder="0-846" value="0">
+                            <label for="bmi">BMI (Body Mass Index)</label>
+                            <input type="number" id="bmi" name="bmi" placeholder="15-50" step="0.1" required>
+                            <small>Calculate: weight(kg) ÷ height(m)²</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="diabetespedigreefunction">Diabetes Pedigree Function</label>
-                            <input type="number" id="diabetespedigreefunction" name="diabetespedigreefunction" placeholder="0.078-2.42" step="0.001" value="0.5">
-                            <small style="display: block; margin-top: 5px; color: #666;">A measure of diabetes hereditary influence (0.078-2.42)</small>
+                            <label for="HbA1c_level">HbA1c Level (%)</label>
+                            <input type="number" id="HbA1c_level" name="HbA1c_level" placeholder="3.5-15.0" step="0.1" required>
+                            <small>Normal: <5.7%, Prediabetes: 5.7-6.4%, Diabetes: ≥6.5%</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blood_glucose_level">Blood Glucose Level (mg/dL)</label>
+                            <input type="number" id="blood_glucose_level" name="blood_glucose_level" placeholder="70-300" required>
+                            <small>Normal fasting: 70-99 mg/dL, Random: <140 mg/dL</small>
                         </div>
 
                         <button type="button" id="analyzeButton">Analyze Risk</button>
@@ -299,41 +333,43 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('results').classList.add('hidden');
 
-            // Create a FormData object from the form inputs
-            const formData = new FormData();
-
             // Get and validate all form inputs
-            const glucose = document.getElementById('glucose').value;
-            const bmi = document.getElementById('bmi').value;
+            const gender = document.getElementById('gender').value;
             const age = document.getElementById('age').value;
-            const bloodpressure = document.getElementById('bloodpressure').value;
-            const pregnancies = document.getElementById('pregnancies').value;
-            const skinthickness = document.getElementById('skinthickness').value;
-            const insulin = document.getElementById('insulin').value;
-            const diabetespedigreefunction = document.getElementById('diabetespedigreefunction').value;
+            const hypertension = document.getElementById('hypertension').value;
+            const heart_disease = document.getElementById('heart_disease').value;
+            const smoking_history = document.getElementById('smoking_history').value;
+            const bmi = document.getElementById('bmi').value;
+            const HbA1c_level = document.getElementById('HbA1c_level').value;
+            const blood_glucose_level = document.getElementById('blood_glucose_level').value;
 
             // Basic validation
-            if (!glucose || !bmi || !age || !bloodpressure) {
+            if (!gender || !age || !hypertension || !heart_disease || !smoking_history || !bmi || !HbA1c_level || !blood_glucose_level) {
                 alert("Please fill in all required fields");
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('initialMessage').classList.remove('hidden');
                 return;
             }
 
-            // Add all values to the FormData
-            formData.append('glucose', glucose);
-            formData.append('bmi', bmi);
-            formData.append('age', age);
-            formData.append('bloodpressure', bloodpressure);
-            formData.append('pregnancies', pregnancies);
-            formData.append('skinthickness', skinthickness);
-            formData.append('insulin', insulin);
-            formData.append('diabetespedigreefunction', diabetespedigreefunction);
+            // Prepare the data object to match your model's expected columns
+            const predictionData = {
+                gender: parseInt(gender),
+                age: parseInt(age),
+                hypertension: parseInt(hypertension),
+                heart_disease: parseInt(heart_disease),
+                smoking_history: parseInt(smoking_history),
+                bmi: parseFloat(bmi),
+                HbA1c_level: parseFloat(HbA1c_level),
+                blood_glucose_level: parseFloat(blood_glucose_level)
+            };
 
             // Send data to the backend API
             fetch('/predict_diabetes', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(predictionData)
             })
             .then(response => {
                 if (!response.ok) {
@@ -347,35 +383,37 @@
                 document.getElementById('results').classList.remove('hidden');
 
                 // Process the prediction results
-                const prediction = data.label;
-                const confidence = data.confidence;
+                const prediction = data.prediction || data.label;
+                const confidence = data.confidence || data.probability;
 
                 // Calculate risk level and set appropriate color
                 let riskCategory, riskColor, recommendations;
-                const isDiabetic = prediction.includes('Positive');
-                const riskScore = isDiabetic ? confidence : 100 - confidence;
+                const isDiabetic = prediction === 1 || prediction === "1" || prediction.toString().toLowerCase().includes('positive');
+                const riskScore = isDiabetic ? (confidence * 100) : ((1 - confidence) * 100);
 
-                if (riskScore < 20) {
+                if (riskScore < 30) {
                     riskCategory = "Low Risk";
                     riskColor = "#4CAF50"; // Green
                     recommendations = `
                         <h4>Your risk is low, but staying healthy is important:</h4>
                         <ul>
                             <li>Maintain a balanced diet rich in fruits and vegetables</li>
-                            <li>Continue regular physical activity</li>
+                            <li>Continue regular physical activity (150 minutes/week)</li>
                             <li>Get routine check-ups once a year</li>
+                            <li>Monitor your HbA1c levels annually</li>
                         </ul>
                     `;
-                } else if (riskScore < 50) {
+                } else if (riskScore < 70) {
                     riskCategory = "Moderate Risk";
                     riskColor = "#FFC107"; // Amber
                     recommendations = `
                         <h4>You have moderate risk factors that should be addressed:</h4>
                         <ul>
-                            <li>Consider speaking with a healthcare provider</li>
+                            <li>Consult with a healthcare provider about diabetes prevention</li>
                             <li>Increase physical activity to at least 150 minutes per week</li>
-                            <li>Reduce sugar and refined carbohydrate intake</li>
-                            <li>Monitor your blood glucose levels regularly</li>
+                            <li>Follow a low-glycemic diet and reduce refined sugars</li>
+                            <li>Monitor your HbA1c and blood glucose levels every 6 months</li>
+                            <li>Consider weight management if BMI is elevated</li>
                         </ul>
                     `;
                 } else {
@@ -384,18 +422,19 @@
                     recommendations = `
                         <h4>Your risk factors indicate a high risk for diabetes:</h4>
                         <ul>
-                            <li>Schedule an appointment with a healthcare provider immediately</li>
-                            <li>Consider getting an A1C test and glucose tolerance test</li>
+                            <li><strong>Schedule an appointment with a healthcare provider immediately</strong></li>
+                            <li>Request additional diabetes screening tests (OGTT, fasting glucose)</li>
                             <li>Work with a nutritionist to develop a diabetes prevention diet</li>
                             <li>Aim for at least 30 minutes of physical activity daily</li>
-                            <li>Monitor your blood glucose levels regularly</li>
+                            <li>Monitor your HbA1c and blood glucose levels every 3 months</li>
+                            <li>Consider lifestyle intervention programs</li>
                         </ul>
                     `;
                 }
 
                 // Update the UI
                 const riskLevelBar = document.getElementById('riskLevelBar');
-                riskLevelBar.style.width = `${riskScore}%`;
+                riskLevelBar.style.width = `${Math.min(riskScore, 100)}%`;
                 riskLevelBar.style.backgroundColor = riskColor;
 
                 document.getElementById('riskText').textContent = `${riskCategory} (${Math.round(riskScore)}%)`;
