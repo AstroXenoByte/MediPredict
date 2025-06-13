@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
+import tensorflow as tf
+from tensorflow.keras.models import load_model
 import numpy as np
+from PIL import Image
 import io
 import os
 import pickle
@@ -7,15 +10,36 @@ import joblib
 
 app = Flask(__name__, static_url_path='/static')
 
+# Load eye disease model (TensorFlow/Keras)
+try:
+    # Replace with the actual path to your eye disease model
+    eye_model = load_model('./my_model.keras')
+    print("Eye disease model loaded successfully")
+except Exception as e:
+    print(f"Error loading eye disease model: {e}")
+    eye_model = None
 
 # Load diabetes model (scikit-learn)
 try:
     # Load the pickle model for text-based inputs
-    diabetes_model = joblib.load('diabetes_model_logistic.pkl')
+    diabetes_model = joblib.load('diabetes_ensemble_model.pkl')
     print("Diabetes model loaded successfully")
 except Exception as e:
     print(f"Error loading diabetes model: {e}")
     diabetes_model = None
+
+# Labels for eye disease prediction
+EYE_DISEASE_LABELS = ['Normal', 'Diabetes', 'Glaucoma', 'Cataract', 'AMD', 'Hypertension', 'Myopia', 'Other']
+
+
+def preprocess_eye_image(image):
+    # Resize to 224x224, normalize to [0,1]
+    image = image.resize((224, 224))
+    image = np.array(image) / 255.0
+    if image.shape[-1] == 4:  # Remove alpha channel if present
+        image = image[..., :3]
+    # Add batch dimension: [1, 224, 224, 3]
+    return np.expand_dims(image, axis=0)
 
 
 def prepare_diabetes_features(form_data):
@@ -54,14 +78,21 @@ def prepare_diabetes_features(form_data):
         # Return None to indicate error
         return None
 
-
 @app.route('/')
+def pre_landing():
+    # Serve the new pre-landing page
+    return render_template('xvlink_landing.html')
+
+
+@app.route('/home')
 def index():
-    # Serve the landing page
-    return render_template('index.html')
+    # Serve the original landing page (now at /home)
+    return render_template('medipredict.html')
 
 
-
+@app.route('/eye_health')
+def eye_health():
+    return render_template('eye_health_prediction.html')
 
 
 @app.route('/diabetes')
@@ -73,6 +104,35 @@ def diabetes():
 def serve_static(path):
     # Serve static files (CSS, JS, images)
     return send_from_directory('static', path)
+
+
+@app.route('/predict_eye_disease', methods=['POST'])
+def predict_eye_disease():
+    if not eye_model:
+        return jsonify({'error': 'Eye disease model not loaded'}), 500
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
+    try:
+        image_file = request.files['image']
+        image = Image.open(image_file)
+        preprocessed = preprocess_eye_image(image)
+
+        # Run prediction
+        predictions = eye_model.predict(preprocessed)[0]
+        predicted_class = np.argmax(predictions)
+        confidence = float(predictions[predicted_class]) * 100
+
+        result = {
+            'label': EYE_DISEASE_LABELS[predicted_class],
+            'confidence': round(confidence, 2)
+        }
+
+        print(f"Eye disease prediction: {result}")
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error during eye disease prediction: {str(e)}")
+        return jsonify({'error': f'Prediction error: {str(e)}'}), 500
 
 
 @app.route('/predict_diabetes', methods=['POST'])
