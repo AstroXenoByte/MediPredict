@@ -22,7 +22,7 @@ except Exception as e:
 # Load diabetes model (scikit-learn)
 try:
     # Load the pickle model for text-based inputs
-    diabetes_model = joblib.load('diabetes_model_logistic.pkl')
+    diabetes_model = joblib.load('diabetes_ensemble_model.pkl')
     print("Diabetes model loaded successfully")
 except Exception as e:
     print(f"Error loading diabetes model: {e}")
